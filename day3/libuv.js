@@ -66,14 +66,14 @@
 // 👉 That’s why CPU-intensive tasks (like hashing with crypto) also go to the thread pool.
 
 //🔹 Example with libuv in action
-const fs = require("fs");
+const fs = require('fs');
 
 console.log("Start");
 
-// // File read (goes to libuv thread pool)
-// fs.readFile("file.txt", "utf8", (err, data) => {
-//   console.log("File content:", data);
-// });
+// File read (goes to libuv thread pool)
+fs.readFile("./data.json", "utf8", (err, res) => {
+  console.log("fs content:", res); // this will give data of "data.json" file 
+});
 
 setTimeout(() => {
   console.log("Timer done");
