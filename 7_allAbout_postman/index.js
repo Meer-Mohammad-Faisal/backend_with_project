@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());  // explore about json vs javascript object notation
 
 app.get("/user", (req, res) => {
-    console.log(req);
+    console.log(typeof req.body.name);
     
     res.send({name:"faisal"});
 })
