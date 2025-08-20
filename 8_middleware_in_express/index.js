@@ -15,7 +15,10 @@ const BookStore = [
 app.use(express.json());
 
 app.get("/book", (req, res) => {  
-    res.send(BookStore);
+    console.log(req.query);
+
+    const Book = BookStore.filter(info => info.author == req.query.author);
+    res.send(Book);
 })
 
 app.get("/book/:id", (req, res) => {
