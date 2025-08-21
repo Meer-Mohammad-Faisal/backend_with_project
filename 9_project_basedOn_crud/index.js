@@ -77,13 +77,65 @@ app.patch("/admin", Auth, (req, res) => {
 
 
 
+// FOR user
+app.post("/user/:id", (req, res) => {
+
+    const id = parseInt(req.params.id);
+
+    const foodItem = FoodMenu.find(item => item.id === id);
+
+    if(foodItem){
+        AddToCart.push(foodItem);
+        res.status(200).send("Item added successfully");
+    }
+    else{
+        res.send("Item Out of stock");
+    }
+})
+
+app.delete("/user/:id", (req, res) => {
+    try{
+    const id = parseInt(req.params.id);
+
+    const index = AddToCart.findIndex(item => item.id === id);
+
+    if(index != -1){
+        AddToCart.splice(index, 1);
+        res.send("Item removed successfully");
+    }
+    else{
+        res.status(402).send("Item in not present in Cart");
+    }
+    }
+    catch(err){
+        res.send("Some error: " + err);
+    }
+})
+
+
+app.get("/user", (req, res) => {
+    if(AddToCart.length == 0)
+        res.send("card is empty");
+    else
+    res.send(AddToCart);
+})
 
 
 
 
+// ERROR HANDLING--- example
+app.get("/dummy", (req, res) => {
+    try{
+        JSON.parse("invalid json");
+        res.send("Hello j");
+    }
+    catch(err){
+        res.send("Some error occured");
+    }
+})
+     
 
-
-
+// question: if we can parse the json object throw JSON.parse(JSON), then why we use express.json()?
 
 
 
