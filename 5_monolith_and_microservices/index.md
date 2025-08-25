@@ -18,7 +18,6 @@ microservice/ Monolith
 
 
 
-
 🔹 1. Monolithic Architecture
 
 All code in one big application (single codebase).
