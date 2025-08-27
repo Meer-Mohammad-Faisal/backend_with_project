@@ -33,9 +33,7 @@ async function main() {
     // const result = await User.find({name:"Faisal"});
     // console.log(result);
 
-    
+
 }     
 
-main()
-.then(() => console.log("Connected to DB"))
-.catch((err) => console.log(err));
+module.exports = main;
