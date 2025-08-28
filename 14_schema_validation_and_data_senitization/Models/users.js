@@ -3,27 +3,45 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema({
     firstName:{
-        type:String
+        type:String, 
+        required: true,
+        minLength: 3,
+        maxLength: 20,
     },
     lastName:{
         type:String
     }, 
     age:{
-        type:Number
+        type:Number,
+        min: 14,
+        max: 70, 
+        required:true,
     }, 
     gender:{
-        type:String
+        type:String,
+        // enum:["male", "female", "other"],
+        validate(value){
+            if(!["male", "female", "others"].includes(value))
+                throw new Error("Invalid Gender");
+        }
     }, 
     emailId:{
-        type:String
+        type:String, 
+        unique: true,
+        required: true,
+        trim:true,
+        lowercase:true,
+        immutable:true,
+        
     }, 
     password:{
         type:String
     },
     photo:{
-        type:String // link
+        type:String, // link
+        default: "this is a default photo" 
     }
-})
+}, {timestamps:true})
 
 
 const User = mongoose.model("user", userSchema);
