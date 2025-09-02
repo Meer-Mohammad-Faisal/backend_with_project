@@ -3,10 +3,13 @@ const app = express();
 const main = require("./database");
 const User = require("./Models/users");
 const validUser = require("./utils/validateUser");
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
+const jwt = require('jsonwebtoken');
 
 
 app.use(express.json());
+app.use(cookieParser());
 
 
 app.post("/register", async (req, res) => {
@@ -45,9 +48,14 @@ app.post("/login", async (req, res) => {
 
         if(!isAllowed)
             throw new Error("Invalid credentials");
-        else{
+        
+
+            // jwt token:---
+            const token = jwt.sign({_id:people._id, emailId:people.emailId}, "Faisal@1234");
+
+            res.cookie("token",token);
             res.send("Login Successfully");
-        }
+        
 
     }catch(err){
         res.send("Error "+err);
@@ -57,7 +65,12 @@ app.post("/login", async (req, res) => {
 
 app.get("/info", async(req, res) => {
     try{
+        // validate the user first
+        const payload = jwt.verify.apply(req.cookies.token, "Faisal@1234");
+        console.log(payload);
         const result = await User.find();
+
+
         res.send(result);
     }
     catch(err){
@@ -65,9 +78,11 @@ app.get("/info", async(req, res) => {
     }
 })
 
-app.get("/user/:id", async(req, res) => {
+app.get("/user", async(req, res) => {
     try{
-        const result = await User.findById(req.params.id);
+        const payload = jwt.verify.apply(req.cookies.token, "Faisal@1234");
+        //console.log(payload);
+        const result = await User.findById(payload._id);
         res.send(result);
     }catch(err){
         res.send("Error "+err.message);

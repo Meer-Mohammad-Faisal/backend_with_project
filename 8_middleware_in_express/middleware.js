@@ -30,7 +30,7 @@ const app = express();
 // // the o/p is: first, second, third, fourth, fifth, sixth.
 
 
-// useccase of middleware
+// use case of middleware
 
 // maintanance logs through middleware.
 app.use("/user", (req, res, next) => {
