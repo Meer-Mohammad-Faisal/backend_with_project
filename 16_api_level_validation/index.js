@@ -65,12 +65,12 @@ app.post("/login", async (req, res) => {
 
 app.get("/info", async(req, res) => {
     try{
-        // validate the user first
-        const payload = jwt.verify.apply(req.cookies.token, "Faisal@1234");
-        console.log(payload);
+        // // validate the user first
+         const payload = jwt.verify.apply(req.cookies.token, "Faisal@1234");
+         console.log(payload);
         const result = await User.find();
 
-
+        
         res.send(result);
     }
     catch(err){
