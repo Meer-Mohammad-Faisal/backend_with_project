@@ -25,3 +25,5 @@ redis store data in key-value pair.// that is why it is very fast (and store in 
 
 mongoDb: Document
 SQL:key-value. 
+
+

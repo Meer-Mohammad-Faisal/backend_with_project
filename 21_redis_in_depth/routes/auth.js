@@ -4,6 +4,10 @@ const validUser = require("../utils/validateUser");
 const authRouter = express.Router();
 const bcrypt = require("bcrypt");
 const User = require("../Models/users");
+const redisClient = require("../config/redis");
+const jwt = require('jsonwebtoken');
+const userAuth = require("../middleware/userAuth");
+
 
 // /auth/register
 
@@ -62,14 +66,29 @@ authRouter.post("/login", async (req, res) => {
  // /auth/logout
 
  // Reddis ke database mein hmko Blocked Token lake dega
-authRouter.post("/logout", async (req, res) => {
+authRouter.post("/logout",userAuth, async (req, res) => {
     try{
-        // // method: changing the previous cookie
-        // res.cookie("token","hojsghoahgjnjnoiensdnoigjnjnomnoinairo");
+        const {token} = req.cookies;
+        // console.log(token);
+
+
+        if (!token) {
+        return res.status(400).send("No token found. Please log in first.");
+        }
+
+        const payload = jwt.decode(token);
+        if (!payload || !payload.exp) {
+        return res.status(400).send("Invalid token.");
+        }
+
+
+
+        await redisClient.set(`token:${token}`, "Blocked");
+        // await redisClient.expire(`token:${token}`, 1800);
+        await redisClient.expireAt(`token:${token}`, payload.exp);
 
         // // method: expiring the cookies(clearing the cookies)
-        res.cookie("token",null,{expires: new Date(Date.now())});
-
+        res.cookie("token", null, { expires: new Date(Date.now()) });
         res.send("Logged out successfully");
     }catch(err){
         res.send("Error "+err);

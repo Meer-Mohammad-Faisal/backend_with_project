@@ -51,11 +51,4 @@ const InitlizeConnection = async()=>{
 InitlizeConnection();
 
 
-main()
-.then(async () =>{
-    console.log("Connected to DB")
-    app.listen(process.env.PORT, () => {
-        console.log("listning on port 3000");
-    })
-})
-.catch((err) => console.log(err));
+
