@@ -6,7 +6,8 @@ const main = require('./aichat');
 
 const app = express();
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static("public"));
+
 
 // Connect MongoDB
 connectDB();

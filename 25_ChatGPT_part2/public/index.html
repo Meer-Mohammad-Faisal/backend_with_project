@@ -3,163 +3,270 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Faisal's AI Chat</title>
-
+  <title>Fais-GPT</title>
   <style>
     * {
       box-sizing: border-box;
     }
 
     body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #667eea, #764ba2);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #0d1b2a, #1b4332);
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       margin: 0;
-      padding: 10px;
+      padding: 20px;
+      color: #e9ecef;
     }
 
     .chat-container {
       width: 100%;
-      max-width: 600px;
+      max-width: 800px;
       height: 90vh;
       max-height: 800px;
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(18, 36, 28, 0.85);
       backdrop-filter: blur(12px);
-      border-radius: 20px;
-      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      color: white;
+      border: 1px solid rgba(76, 175, 80, 0.2);
     }
 
     .chat-header {
-      background: rgba(0, 0, 0, 0.3);
-      text-align: center;
-      padding: 15px;
-      font-size: 22px;
+      background: rgba(22, 44, 34, 0.95);
+      padding: 18px 24px;
+      font-size: 20px;
       font-weight: 600;
-      letter-spacing: 1px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid rgba(76, 175, 80, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      font-size: 24px;
     }
 
     .messages {
       flex: 1;
-      padding: 15px;
+      padding: 20px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 16px;
       scroll-behavior: smooth;
     }
 
     .msg {
       display: inline-block;
-      padding: 12px 16px;
-      border-radius: 16px;
+      padding: 14px 18px;
+      border-radius: 18px;
       font-size: 15px;
       line-height: 1.5;
       animation: fadeIn 0.3s ease-in-out;
       word-wrap: break-word;
       max-width: 85%;
       width: fit-content;
+      position: relative;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     .user {
       align-self: flex-end;
-      background: #4a90e2;
+      background: linear-gradient(135deg, #2d6a4f, #40916c);
       color: white;
-      border-bottom-right-radius: 4px;
+      border-bottom-right-radius: 6px;
     }
 
     .bot {
       align-self: flex-start;
-      background: #50e3c2;
-      color: #111;
-      border-bottom-left-radius: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #e9ecef;
+      border: 1px solid rgba(76, 175, 80, 0.2);
+      border-bottom-left-radius: 6px;
     }
 
     .chat-input {
       display: flex;
-      padding: 10px;
-      background: rgba(255, 255, 255, 0.1);
-      border-top: 1px solid rgba(255, 255, 255, 0.2);
-      gap: 8px;
+      padding: 16px;
+      background: rgba(22, 44, 34, 0.9);
+      border-top: 1px solid rgba(76, 175, 80, 0.2);
+      gap: 10px;
     }
 
     .chat-input input {
       flex: 1;
-      padding: 12px 15px;
+      padding: 14px 18px;
       border: none;
-      border-radius: 14px;
+      border-radius: 12px;
       font-size: 15px;
       outline: none;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.08);
+      color: #e9ecef;
+      transition: all 0.3s ease;
+    }
+
+    .chat-input input:focus {
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+    }
+
+    .chat-input input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
     }
 
     .chat-input button {
-      background: linear-gradient(135deg, #ff7eb3, #ff5277);
+      background: linear-gradient(135deg, #2d6a4f, #40916c);
       border: none;
-      padding: 12px 20px;
-      border-radius: 14px;
+      padding: 14px 24px;
+      border-radius: 12px;
       color: white;
-      font-weight: bold;
+      font-weight: 600;
       cursor: pointer;
-      transition: 0.3s;
+      transition: all 0.3s ease;
       white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
     .chat-input button:hover {
-      transform: scale(1.05);
+      background: linear-gradient(135deg, #1b4332, #2d6a4f);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .chat-input button:active {
+      transform: translateY(0);
+    }
+
+    .timestamp {
+      font-size: 11px;
+      opacity: 0.7;
+      margin-top: 4px;
+      text-align: right;
+    }
+
+    .bot .timestamp {
+      text-align: left;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(5px); }
+      from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    ::-webkit-scrollbar {
+    /* Scrollbar styling */
+    .messages::-webkit-scrollbar {
       width: 6px;
     }
-    ::-webkit-scrollbar-thumb {
-      background-color: rgba(255, 255, 255, 0.3);
+    
+    .messages::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .messages::-webkit-scrollbar-thumb {
+      background-color: rgba(76, 175, 80, 0.5);
       border-radius: 10px;
     }
 
     /* Responsive Design */
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
       .chat-container {
-        height: 90vh;
-        border-radius: 16px;
+        height: 95vh;
+        border-radius: 12px;
       }
 
       .chat-header {
+        padding: 16px 20px;
         font-size: 18px;
+      }
+
+      .messages {
+        padding: 16px;
       }
 
       .msg {
         font-size: 14px;
         max-width: 90%;
+        padding: 12px 16px;
+      }
+
+      .chat-input {
+        padding: 14px;
       }
 
       .chat-input input {
+        padding: 12px 16px;
         font-size: 14px;
       }
 
       .chat-input button {
-        padding: 10px 15px;
+        padding: 12px 18px;
       }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+      
+      .msg {
+        max-width: 95%;
+      }
+    }
+
+    /* Message status indicators */
+    .status {
+      font-size: 12px;
+      opacity: 0.7;
+      margin-top: 4px;
+      text-align: right;
+    }
+
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 16px;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #4caf50;
+      animation: typingAnimation 1.4s infinite ease-in-out;
+    }
+
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes typingAnimation {
+      0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+      40% { transform: scale(1); opacity: 1; }
     }
   </style>
 </head>
 
 <body>
   <div class="chat-container">
-    <div class="chat-header">🤖 Faisal’s AI Assistant</div>
-    <div class="messages" id="messages"></div>
+    <div class="chat-header">
+      <div class="logo">🅵</div>
+      <div>Fais-GPT</div>
+    </div>
+    <div class="messages" id="messages">
+      <div class="msg bot">
+        Hello! I'm Fais-GPT, your AI assistant. How can I help you today?
+        <div class="timestamp">Just now</div>
+      </div>
+    </div>
     <div class="chat-input">
       <input type="text" id="msg" placeholder="Type your message..." />
       <button id="sendBtn">Send</button>
@@ -167,36 +274,54 @@
   </div>
 
   <script>
-    const userId = "faisal123"; 
+    const userId = "faisal123";
     const messagesDiv = document.getElementById("messages");
     const input = document.getElementById("msg");
     const sendBtn = document.getElementById("sendBtn");
 
+    // Function to add timestamp to messages
+    function getCurrentTime() {
+      const now = new Date();
+      return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
     async function sendMessage() {
       const msg = input.value.trim();
       if (!msg) return;
+      
       appendMessage("user", msg);
       input.value = "";
 
       const typing = document.createElement("div");
-      typing.classList.add("msg", "bot");
-      typing.textContent = "Typing...";
+      typing.classList.add("msg", "bot", "typing-indicator");
+      typing.innerHTML = `
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      `;
       messagesDiv.appendChild(typing);
       scrollToBottom();
 
-      const res = await fetch("/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: userId, msg })
-      });
+      try {
+        // ACTUAL BACKEND CONNECTION - using your original endpoint
+        const res = await fetch("/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: userId, msg }),
+        });
 
-      const data = await res.json();
-      typing.remove();
-      appendMessage("bot", data.reply);
+        const data = await res.json();
+        typing.remove();
+        appendMessage("bot", data.reply || "Something went wrong. Try again!");
+      } catch (error) {
+        typing.remove();
+        appendMessage("bot", "⚠️ Error: Unable to reach server");
+        console.error("API Error:", error);
+      }
     }
 
     sendBtn.addEventListener("click", sendMessage);
-    input.addEventListener("keypress", e => {
+    input.addEventListener("keypress", (e) => {
       if (e.key === "Enter") sendMessage();
     });
 
@@ -204,6 +329,12 @@
       const div = document.createElement("div");
       div.classList.add("msg", role);
       div.textContent = text;
+      
+      const timestamp = document.createElement("div");
+      timestamp.classList.add("timestamp");
+      timestamp.textContent = getCurrentTime();
+      div.appendChild(timestamp);
+      
       messagesDiv.appendChild(div);
       scrollToBottom();
     }
@@ -211,6 +342,11 @@
     function scrollToBottom() {
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
+
+    // Focus on input when page loads
+    window.addEventListener('load', () => {
+      input.focus();
+    });
   </script>
 </body>
 </html>
