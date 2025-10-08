@@ -3,46 +3,70 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fais-GPT</title>
+  <title>Fais-GPT Pro</title>
   <style>
     * {
       box-sizing: border-box;
     }
 
+    :root {
+      --primary: #8A2BE2;
+      --primary-dark: #6A0DAD;
+      --primary-light: #9B4DE3;
+      --secondary: #4A00E0;
+      --accent: #00B4DB;
+      --background: #121212;
+      --surface: #1E1E1E;
+      --surface-light: #2D2D2D;
+      --text-primary: #FFFFFF;
+      --text-secondary: #B0B0B0;
+      --user-msg: linear-gradient(135deg, var(--primary), var(--secondary));
+      --bot-msg: var(--surface-light);
+      --success: #00C853;
+      --warning: #FFAB00;
+      --error: #FF5252;
+    }
+
     body {
       font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-      background: linear-gradient(135deg, #0d1b2a, #1b4332);
+      background: linear-gradient(135deg, var(--background), #2D1B69);
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       margin: 0;
       padding: 20px;
-      color: #e9ecef;
+      color: var(--text-primary);
     }
 
     .chat-container {
       width: 100%;
-      max-width: 800px;
+      max-width: 900px;
       height: 90vh;
       max-height: 800px;
-      background: rgba(18, 36, 28, 0.85);
+      background: rgba(30, 30, 30, 0.85);
       backdrop-filter: blur(12px);
-      border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      border: 1px solid rgba(76, 175, 80, 0.2);
+      border: 1px solid rgba(138, 43, 226, 0.3);
     }
 
     .chat-header {
-      background: rgba(22, 44, 34, 0.95);
+      background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
       padding: 18px 24px;
       font-size: 20px;
       font-weight: 600;
       letter-spacing: 0.5px;
-      border-bottom: 1px solid rgba(76, 175, 80, 0.3);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-left {
       display: flex;
       align-items: center;
       gap: 10px;
@@ -50,6 +74,26 @@
 
     .logo {
       font-size: 24px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .header-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      color: white;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .header-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
     }
 
     .messages {
@@ -73,30 +117,60 @@
       max-width: 85%;
       width: fit-content;
       position: relative;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
     .user {
       align-self: flex-end;
-      background: linear-gradient(135deg, #2d6a4f, #40916c);
+      background: var(--user-msg);
       color: white;
       border-bottom-right-radius: 6px;
     }
 
     .bot {
       align-self: flex-start;
-      background: rgba(255, 255, 255, 0.1);
-      color: #e9ecef;
-      border: 1px solid rgba(76, 175, 80, 0.2);
+      background: var(--bot-msg);
+      color: var(--text-primary);
+      border: 1px solid rgba(138, 43, 226, 0.3);
       border-bottom-left-radius: 6px;
+    }
+
+    .file-msg {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .file-preview {
+      max-width: 200px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .file-info {
+      font-size: 13px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .file-icon {
+      font-size: 16px;
+    }
+
+    .chat-input-container {
+      padding: 16px;
+      background: var(--surface);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .chat-input {
       display: flex;
-      padding: 16px;
-      background: rgba(22, 44, 34, 0.9);
-      border-top: 1px solid rgba(76, 175, 80, 0.2);
       gap: 10px;
+      margin-bottom: 10px;
     }
 
     .chat-input input {
@@ -107,13 +181,13 @@
       font-size: 15px;
       outline: none;
       background: rgba(255, 255, 255, 0.08);
-      color: #e9ecef;
+      color: var(--text-primary);
       transition: all 0.3s ease;
     }
 
     .chat-input input:focus {
       background: rgba(255, 255, 255, 0.12);
-      box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+      box-shadow: 0 0 0 2px var(--primary-light);
     }
 
     .chat-input input::placeholder {
@@ -121,7 +195,7 @@
     }
 
     .chat-input button {
-      background: linear-gradient(135deg, #2d6a4f, #40916c);
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
       border: none;
       padding: 14px 24px;
       border-radius: 12px;
@@ -137,13 +211,58 @@
     }
 
     .chat-input button:hover {
-      background: linear-gradient(135deg, #1b4332, #2d6a4f);
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
     .chat-input button:active {
       transform: translateY(0);
+    }
+
+    .input-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .file-upload-btn {
+      background: transparent;
+      border: 1px dashed rgba(255, 255, 255, 0.3);
+      color: var(--text-secondary);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .file-upload-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    .theme-toggle {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: var(--text-secondary);
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--accent);
+      color: var(--accent);
     }
 
     .timestamp {
@@ -172,7 +291,7 @@
     }
     
     .messages::-webkit-scrollbar-thumb {
-      background-color: rgba(76, 175, 80, 0.5);
+      background-color: var(--primary);
       border-radius: 10px;
     }
 
@@ -180,7 +299,7 @@
     @media (max-width: 768px) {
       .chat-container {
         height: 95vh;
-        border-radius: 12px;
+        border-radius: 16px;
       }
 
       .chat-header {
@@ -198,7 +317,7 @@
         padding: 12px 16px;
       }
 
-      .chat-input {
+      .chat-input-container {
         padding: 14px;
       }
 
@@ -219,6 +338,16 @@
       
       .msg {
         max-width: 95%;
+      }
+      
+      .header-actions {
+        flex-direction: column;
+        gap: 5px;
+      }
+      
+      .header-btn {
+        padding: 6px 10px;
+        font-size: 12px;
       }
     }
 
@@ -241,7 +370,7 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background-color: #4caf50;
+      background-color: var(--accent);
       animation: typingAnimation 1.4s infinite ease-in-out;
     }
 
@@ -252,24 +381,82 @@
       0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
       40% { transform: scale(1); opacity: 1; }
     }
+
+    /* Theme variants */
+    .theme-light {
+      --background: #F5F7FA;
+      --surface: #FFFFFF;
+      --surface-light: #F0F2F5;
+      --text-primary: #2D3748;
+      --text-secondary: #718096;
+      --bot-msg: #F0F2F5;
+    }
+
+    .theme-light body {
+      background: linear-gradient(135deg, #E3F2FD, #F3E5F5);
+    }
+
+    .theme-light .chat-container {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(138, 43, 226, 0.2);
+    }
+
+    .theme-light .chat-input input {
+      background: rgba(0, 0, 0, 0.05);
+      color: var(--text-primary);
+    }
+
+    .theme-light .chat-input input:focus {
+      background: rgba(0, 0, 0, 0.08);
+    }
+
+    .theme-light .file-upload-btn {
+      border: 1px dashed rgba(0, 0, 0, 0.3);
+      color: var(--text-secondary);
+    }
+
+    .theme-light .file-upload-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
   </style>
 </head>
 
 <body>
   <div class="chat-container">
     <div class="chat-header">
-      <div class="logo">🅵</div>
-      <div>Fais-GPT</div>
+      <div class="header-left">
+        <div class="logo">🅵</div>
+        <div>Fais-GPT Pro</div>
+      </div>
+      <div class="header-actions">
+        <button class="header-btn" id="clearHistory">Clear History</button>
+        <button class="header-btn" id="exportChat">Export Chat</button>
+        <button class="theme-toggle" id="themeToggle">🌙 Dark</button>
+      </div>
     </div>
     <div class="messages" id="messages">
       <div class="msg bot">
-        Hello! I'm Fais-GPT, your AI assistant. How can I help you today?
+        Hello! I'm Fais-GPT Pro, your enhanced AI assistant. I now support file uploads and remember our conversation history!
         <div class="timestamp">Just now</div>
       </div>
     </div>
-    <div class="chat-input">
-      <input type="text" id="msg" placeholder="Type your message..." />
-      <button id="sendBtn">Send</button>
+    <div class="chat-input-container">
+      <div class="chat-input">
+        <input type="text" id="msg" placeholder="Type your message..." />
+        <button id="sendBtn">
+          <span>Send</span>
+          <span>➤</span>
+        </button>
+      </div>
+      <div class="input-actions">
+        <label for="fileInput" class="file-upload-btn">
+          <span>📎</span>
+          <span>Upload File</span>
+        </label>
+        <input type="file" id="fileInput" multiple />
+        <div class="file-info" id="fileInfo">No file selected</div>
+      </div>
     </div>
   </div>
 
@@ -278,6 +465,25 @@
     const messagesDiv = document.getElementById("messages");
     const input = document.getElementById("msg");
     const sendBtn = document.getElementById("sendBtn");
+    const fileInput = document.getElementById("fileInput");
+    const fileInfo = document.getElementById("fileInfo");
+    const clearHistoryBtn = document.getElementById("clearHistory");
+    const exportChatBtn = document.getElementById("exportChat");
+    const themeToggle = document.getElementById("themeToggle");
+
+    // Initialize message history from localStorage
+    let messageHistory = JSON.parse(localStorage.getItem('fais-gpt-history')) || [];
+    let currentTheme = localStorage.getItem('fais-gpt-theme') || 'dark';
+
+    // Apply saved theme
+    document.body.classList.toggle('theme-light', currentTheme === 'light');
+    themeToggle.textContent = currentTheme === 'light' ? '☀️ Light' : '🌙 Dark';
+
+    // Load message history on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadMessageHistory();
+      input.focus();
+    });
 
     // Function to add timestamp to messages
     function getCurrentTime() {
@@ -285,11 +491,173 @@
       return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
 
+    // Function to save message to history
+    function saveMessageToHistory(role, text, fileData = null) {
+      const message = {
+        role,
+        text,
+        timestamp: new Date().toISOString(),
+        fileData
+      };
+      messageHistory.push(message);
+      
+      // Keep only last 100 messages to prevent storage overflow
+      if (messageHistory.length > 100) {
+        messageHistory = messageHistory.slice(-100);
+      }
+      
+      localStorage.setItem('fais-gpt-history', JSON.stringify(messageHistory));
+    }
+
+    // Function to load message history
+    function loadMessageHistory() {
+      // Clear existing messages except the first bot message
+      while (messagesDiv.children.length > 1) {
+        messagesDiv.removeChild(messagesDiv.lastChild);
+      }
+      
+      // Add messages from history
+      messageHistory.forEach(msg => {
+        if (msg.fileData) {
+          displayFileMessage(msg.role, msg.fileData);
+        } else {
+          appendMessage(msg.role, msg.text, false);
+        }
+      });
+      
+      scrollToBottom();
+    }
+
+    // Function to handle file upload
+    function handleFileUpload(file) {
+      const reader = new FileReader();
+      
+      reader.onload = function(e) {
+        const fileData = {
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          data: e.target.result
+        };
+        
+        displayFileMessage('user', fileData);
+        saveMessageToHistory('user', `Uploaded file: ${file.name}`, fileData);
+        
+        // Clear file input
+        fileInput.value = '';
+        fileInfo.textContent = 'No file selected';
+        
+        // In a real app, you would send the file to your backend here
+        // For demo, we'll simulate a bot response
+        simulateFileResponse(file);
+      };
+      
+      if (file.type.startsWith('image/')) {
+        reader.readAsDataURL(file);
+      } else {
+        // For non-image files, we'll just store metadata
+        const fileData = {
+          name: file.name,
+          type: file.type,
+          size: file.size
+        };
+        
+        displayFileMessage('user', fileData);
+        saveMessageToHistory('user', `Uploaded file: ${file.name}`, fileData);
+        
+        // Clear file input
+        fileInput.value = '';
+        fileInfo.textContent = 'No file selected';
+        
+        simulateFileResponse(file);
+      }
+    }
+
+    // Function to display file message
+    function displayFileMessage(role, fileData) {
+      const div = document.createElement("div");
+      div.classList.add("msg", role, "file-msg");
+      
+      if (fileData.type && fileData.type.startsWith('image/') && fileData.data) {
+        const img = document.createElement("img");
+        img.src = fileData.data;
+        img.classList.add("file-preview");
+        div.appendChild(img);
+      }
+      
+      const fileInfoDiv = document.createElement("div");
+      fileInfoDiv.classList.add("file-info");
+      
+      // Add appropriate icon based on file type
+      let icon = '📄';
+      if (fileData.type) {
+        if (fileData.type.startsWith('image/')) icon = '🖼️';
+        else if (fileData.type.includes('pdf')) icon = '📕';
+        else if (fileData.type.includes('word') || fileData.type.includes('document')) icon = '📝';
+        else if (fileData.type.includes('zip') || fileData.type.includes('archive')) icon = '📦';
+      }
+      
+      fileInfoDiv.innerHTML = `
+        <span class="file-icon">${icon}</span>
+        <span>${fileData.name}</span>
+        <span>(${formatFileSize(fileData.size)})</span>
+      `;
+      
+      div.appendChild(fileInfoDiv);
+      
+      const timestamp = document.createElement("div");
+      timestamp.classList.add("timestamp");
+      timestamp.textContent = getCurrentTime();
+      div.appendChild(timestamp);
+      
+      messagesDiv.appendChild(div);
+      scrollToBottom();
+    }
+
+    // Function to format file size
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Function to simulate bot response to file upload
+    function simulateFileResponse(file) {
+      const typing = document.createElement("div");
+      typing.classList.add("msg", "bot", "typing-indicator");
+      typing.innerHTML = `
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      `;
+      messagesDiv.appendChild(typing);
+      scrollToBottom();
+
+      setTimeout(() => {
+        typing.remove();
+        
+        let response = "";
+        if (file.type.startsWith('image/')) {
+          response = `I've received your image (${file.name}). It looks great! How would you like me to process it?`;
+        } else if (file.type.includes('pdf')) {
+          response = `I've received your PDF document (${file.name}). Would you like me to summarize its contents?`;
+        } else {
+          response = `I've received your file (${file.name}). How can I assist you with it?`;
+        }
+        
+        appendMessage("bot", response);
+        saveMessageToHistory("bot", response);
+      }, 1500);
+    }
+
     async function sendMessage() {
       const msg = input.value.trim();
       if (!msg) return;
       
       appendMessage("user", msg);
+      saveMessageToHistory("user", msg);
       input.value = "";
 
       const typing = document.createElement("div");
@@ -313,19 +681,77 @@
         const data = await res.json();
         typing.remove();
         appendMessage("bot", data.reply || "Something went wrong. Try again!");
+        saveMessageToHistory("bot", data.reply || "Something went wrong. Try again!");
       } catch (error) {
         typing.remove();
         appendMessage("bot", "⚠️ Error: Unable to reach server");
+        saveMessageToHistory("bot", "⚠️ Error: Unable to reach server");
         console.error("API Error:", error);
       }
     }
 
+    // Event Listeners
     sendBtn.addEventListener("click", sendMessage);
+    
     input.addEventListener("keypress", (e) => {
       if (e.key === "Enter") sendMessage();
     });
+    
+    fileInput.addEventListener("change", (e) => {
+      if (e.target.files.length > 0) {
+        const file = e.target.files[0];
+        fileInfo.textContent = `Selected: ${file.name} (${formatFileSize(file.size)})`;
+        handleFileUpload(file);
+      }
+    });
+    
+    clearHistoryBtn.addEventListener("click", () => {
+      if (confirm("Are you sure you want to clear the chat history?")) {
+        messageHistory = [];
+        localStorage.removeItem('fais-gpt-history');
+        loadMessageHistory();
+        
+        // Add a new welcome message
+        appendMessage("bot", "Chat history has been cleared. How can I help you today?");
+        saveMessageToHistory("bot", "Chat history has been cleared. How can I help you today?");
+      }
+    });
+    
+    exportChatBtn.addEventListener("click", () => {
+      // Create a text representation of the chat
+      let chatText = "Fais-GPT Chat Export\n\n";
+      chatText += `Export Date: ${new Date().toLocaleString()}\n\n`;
+      
+      messageHistory.forEach(msg => {
+        const sender = msg.role === 'user' ? 'You' : 'Fais-GPT';
+        const time = new Date(msg.timestamp).toLocaleTimeString();
+        chatText += `[${time}] ${sender}: ${msg.text}\n`;
+        
+        if (msg.fileData) {
+          chatText += `[${time}] ${sender}: Uploaded file - ${msg.fileData.name}\n`;
+        }
+      });
+      
+      // Create and download the file
+      const blob = new Blob([chatText], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `fais-gpt-chat-${new Date().toISOString().split('T')[0]}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+    
+    themeToggle.addEventListener("click", () => {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.body.classList.toggle('theme-light', currentTheme === 'light');
+      themeToggle.textContent = currentTheme === 'light' ? '☀️ Light' : '🌙 Dark';
+      localStorage.setItem('fais-gpt-theme', currentTheme);
+    });
 
-    function appendMessage(role, text) {
+    function appendMessage(role, text, saveToHistory = true) {
       const div = document.createElement("div");
       div.classList.add("msg", role);
       div.textContent = text;
@@ -337,16 +763,15 @@
       
       messagesDiv.appendChild(div);
       scrollToBottom();
+      
+      if (saveToHistory) {
+        saveMessageToHistory(role, text);
+      }
     }
 
     function scrollToBottom() {
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
-
-    // Focus on input when page loads
-    window.addEventListener('load', () => {
-      input.focus();
-    });
   </script>
 </body>
 </html>
