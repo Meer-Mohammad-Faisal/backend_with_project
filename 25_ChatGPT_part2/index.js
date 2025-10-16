@@ -8,13 +8,15 @@ const app = express();
 app.use(express.json());
 app.use(express.static("public"));
 
+
 // Connect MongoDB
 connectDB();
 
-app.post('/api/chat', async (req, res) => {
+
+app.post('/chat', async (req, res) => {
   try {
     const { id, msg } = req.body;
-    if (!id || !msg) return res.status(400).json({ error: "User ID and message are required" });
+    if (!id || !msg) return res.status(400).send("User ID and message are required");
 
     // Fetch previous chat history
     const previousChats = await Chat.find({ userId: id });
@@ -35,18 +37,12 @@ app.post('/api/chat', async (req, res) => {
     await Chat.create({ userId: id, role: 'user', message: msg });
     await Chat.create({ userId: id, role: 'model', message: answer });
 
-    res.json({ reply: answer });
+    res.send({ reply: answer });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Server Error" });
+    res.status(500).send("Server Error");
   }
 });
 
-// Export for Vercel
-module.exports = app;
-
-// Only listen locally
-if (require.main === module) {
-  const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-}
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
